@@ -1,0 +1,33 @@
+---
+title: "estudo"
+author: "Thayanne Sousa, Arthur Ferrão e Rayla Medeiros"
+date: "6/8/2019"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+library(tidyverse)
+library(readr)
+
+apps_data <- read_csv('data/googleplaystore.csv', col_types = "")
+apps_reviews_data <- read_csv('data/googleplaystore_user_reviews.csv', col_types = "")
+
+```
+
+## Dados da Google Play Store
+
+- Google Play Store é a loja oficial de aplicativos do android, usada por usuários para encontrar e baixar aplicativos desenvolvidos para a plataforma. Contém aplicativos dos mais diversos gêneros e temas, podendo ser de graça ou pago.
+
+- Usaremos dados que foram raspados da google play store e disponibilizados aqui https://www.kaggle.com/lava18/google-play-store-apps
+
+## Histograma de Reviews
+
+```{r}
+apps_data %>% 
+  ggplot(aes(x = Reviews)) + 
+  geom_histogram(
+    na.rm=TRUE,
+    breaks=seq(1, 5, by=1),
+    color="white"
+  )
+```
