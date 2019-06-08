@@ -1,5 +1,5 @@
 ---
-title: "estudo"
+title: "Google Play Store"
 author: "Thayanne Sousa, Arthur Ferrão e Rayla Medeiros"
 date: "6/8/2019"
 output: ioslides_presentation
@@ -22,7 +22,7 @@ apps_reviews_data <- read_csv('data/googleplaystore_user_reviews.csv', col_types
 
 ## Histograma de Reviews
 
-```{r}
+```{r, echo=FALSE}
 apps_data %>% 
   ggplot(aes(x = Reviews)) + 
   geom_histogram(
