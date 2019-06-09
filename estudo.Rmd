@@ -11,6 +11,9 @@ library(readr)
 library(dplyr)
 library(corrplot)
 library(gghighlight)
+library(grid)
+library(gridExtra)
+library(GGally)
 
 dating_data <- 
   na.omit(read.csv("https://raw.githubusercontent.com/nazareno/ciencia-de-dados-1/master/5-regressao/speed-dating/speed-dating.csv")) %>%
@@ -50,11 +53,16 @@ cor(data_without_id$like, data_without_id$attr)
 cor(data_without_id$like, data_without_id$shar)
 ```
 
-## Gráfico de correlações
+## Análise de correlações
 
 ```{r, echo=FALSE}
 dating_clean_data <- dating_data %>% select('like', 'attr', 'shar', 'fun')
-corrplot(cor(dating_clean_data), tl.col = "black")
+dating_clean_data %>%
+  ggcorr(palette = "RdBu",
+         color = "grey50",
+         label = TRUE, hjust = 1,
+         label_size = 3, size = 4,
+         nbreaks = 5, layout.exp = 7)
 ```
 
 ## Histograma das variáveis
@@ -66,17 +74,56 @@ gather(dating_clean_data) %>%
     facet_wrap(~key, scales = 'free_x')
 ```
 
-## Dispersão de dados
+## Comportamento dos dados em relação ao like
 
 ```{r, echo=FALSE}
-ggplot(dating_clean_data, aes(x=shar, y=like)) + 
-  geom_point() +
-  geom_smooth(method=lm)
-
+attr_disp <-dating_data %>% 
+    ggplot(aes(x = attr, y = like)) + 
+    geom_count() 
+shar_disp <-dating_data %>% 
+    ggplot(aes(x = shar, y = like)) + 
+    geom_count() 
+fun_disp <-dating_data %>% 
+    ggplot(aes(x = fun, y = like)) + 
+    geom_count() 
+grid.arrange(attr_disp, shar_disp, fun_disp, nrow = 1)
 ```
 
 ## Modelo de regressão
 
+```{r}
+model <- lm(formula = like ~ attr+ shar + fun,
+               data = dating_data)
+summary(model)
+```
+
+## Análise da NOVA
+```{r}
+anova(model)
+```
 
 
+## Análise de resíduos
+
+## Teste de linearidade
+```{r}
+plot(model, which=1, col=c("blue"))
+```
+
+
+
+## Teste de normalidade
+```{r}
+plot(model, which=2, col=c("blue"))
+```
+
+## Teste de homogeniedade
+```{r}
+plot(model, which=3, col=c("blue"))
+```
+## oi
+
+``` {r}
+shapiro.test(residuals(modelo))
+```
 
