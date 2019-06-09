@@ -14,6 +14,7 @@ library(gghighlight)
 library(grid)
 library(gridExtra)
 library(GGally)
+library(broom)
 
 dating_data <- 
   na.omit(read.csv("https://raw.githubusercontent.com/nazareno/ciencia-de-dados-1/master/5-regressao/speed-dating/speed-dating.csv")) %>%
@@ -94,7 +95,7 @@ grid.arrange(attr_disp, shar_disp, fun_disp, nrow = 1)
 ```{r}
 model <- lm(formula = like ~ attr+ shar + fun,
                data = dating_data)
-summary(model)
+tidy(model)
 ```
 
 ## Análise da NOVA
