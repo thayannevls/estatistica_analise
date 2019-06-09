@@ -1,5 +1,5 @@
 ---
-title: "Google Play Store"
+title: "Encontros relâmpagos"
 author: "Thayanne Sousa, Arthur Ferrão e Rayla Medeiros"
 date: "6/8/2019"
 output: ioslides_presentation
@@ -8,26 +8,75 @@ output: ioslides_presentation
 ```{r setup, include=FALSE, echo=FALSE}
 library(tidyverse)
 library(readr)
+library(dplyr)
+library(corrplot)
+library(gghighlight)
 
-apps_data <- read_csv('data/googleplaystore.csv', col_types = "")
-apps_reviews_data <- read_csv('data/googleplaystore_user_reviews.csv', col_types = "")
-
+dating_data <- 
+  na.omit(read.csv("https://raw.githubusercontent.com/nazareno/ciencia-de-dados-1/master/5-regressao/speed-dating/speed-dating.csv")) %>%
+  select(-c('field', 'from', 'career', 'attr3_s', 'sinc3_s', 'intel3_s', 'fun3_s', 'amb3_s'))
+  
 ```
 
-## Dados da Google Play Store
+## Sobre os dados
 
-- Google Play Store é a loja oficial de aplicativos do android, usada por usuários para encontrar e baixar aplicativos desenvolvidos para a plataforma. Contém aplicativos dos mais diversos gêneros e temas, podendo ser de graça ou pago.
+- Temos dados descrevendo 5000 encontros relâmpagos (speed dating, procura no google) de 4 minutos envolvendo 310 jovens americanos. Os dados originais foram coletados por professores da Columbia Business School no experimento descrito aqui.
 
-- Usaremos dados que foram raspados da google play store e disponibilizados aqui https://www.kaggle.com/lava18/google-play-store-apps
+- Os participantes tinham vários encontros de 4 minutos por noite. Após cada um, preenchiam fichas avaliando aqueles com quem se encontraram. Cada linha nos dados representa um desses encontros.
 
-## Histograma de Reviews
+## O que causa atração à primeira vista?
+
+Utilizaremos a varíavel **like**, que diz o quanto a pessoa 1 gostou da pessoa 2, para ser o parâmetro de atração que vai de 0 até 10. Verificaremos as correlações das outras variáveis com esta e veremos quais influenciam no seu valor.
+
+## Correlações
 
 ```{r, echo=FALSE}
-apps_data %>% 
-  ggplot(aes(x = Reviews)) + 
-  geom_histogram(
-    na.rm=TRUE,
-    breaks=seq(1, 5, by=1),
-    color="white"
-  )
+data_without_id <- dating_data %>% select(-c('iid', 'pid'))
+corrplot(cor(data_without_id), tl.col = "black")
 ```
+
+## Correlações com o gostar
+
+Analisando a visualização anterior, as três varíaveis mais correlacionadas com **like** foram:
+
+- attr: O quanto a pessoa 1 achou a pessoa 2 *atraente*.
+- shar: O quanto a pessoa 1 achou que compartilha interesses e hobbies com a pessoa 2
+- fun: O quanto a pessoa 1 achou a pessoa 2 *divertida*.
+
+## Correlações
+```{r}
+cor(data_without_id$like, data_without_id$fun)
+cor(data_without_id$like, data_without_id$attr)
+cor(data_without_id$like, data_without_id$shar)
+```
+
+## Gráfico de correlações
+
+```{r, echo=FALSE}
+dating_clean_data <- dating_data %>% select('like', 'attr', 'shar', 'fun')
+corrplot(cor(dating_clean_data), tl.col = "black")
+```
+
+## Histograma das variáveis
+
+```{r, echo=FALSE}
+gather(dating_clean_data) %>%
+  ggplot(aes(value)) +
+    geom_histogram(bins = 10, color='white') + 
+    facet_wrap(~key, scales = 'free_x')
+```
+
+## Dispersão de dados
+
+```{r, echo=FALSE}
+ggplot(dating_clean_data, aes(x=shar, y=like)) + 
+  geom_point() +
+  geom_smooth(method=lm)
+
+```
+
+## Modelo de regressão
+
+
+
+
