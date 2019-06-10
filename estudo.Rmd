@@ -107,6 +107,9 @@ anova(model)
 ## Análise de resíduos
 
 ## Teste de linearidade
+
+No gráfico abaixo, vemos que nossos resíduos se distribuem ao longo da reta horizontal, o que nos dá um bom indicador que nossos dados possuem relação linear.
+
 ```{r}
 plot(model, which=1, col=c("blue"))
 ```
@@ -114,11 +117,17 @@ plot(model, which=1, col=c("blue"))
 
 
 ## Teste de normalidade
+
+Nosso modelo segue a distribuição normal, tendo em vista que os resíduos estão seguindo um bom alinhamento com a reta que o nosso modelo propõe.
+
 ```{r}
 plot(model, which=2, col=c("blue"))
 ```
 
 ## Teste de homogeniedade
+
+A linha vermelha é aproximadamente horizontal, então a magnitude média dos resíduos padronizados não está mudando muito em função dos valores ajustados. A propagação ao redor da linha vermelha não varia com os valores ajustados, então a variabilidade de magnitude não varia muito em função dos mesmos. Logo, acreditamos que nossos resíduos possuem homogeinidade.
+
 ```{r}
 plot(model, which=3, col=c("blue"))
 ```
