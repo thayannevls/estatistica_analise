@@ -102,7 +102,9 @@ tidy(model)
 ```{r}
 anova(model)
 ```
+## Conclusão
 
+Utilizando os dados obtidos na etapa que geramos a matriz para análise das correlações, concluimos como melhor modelo o que usa como variáveis independentes os atributos attr, shar e fun, esses que possuem a maior correlação com a variável dependente like. 
 
 ## Análise de resíduos
 
